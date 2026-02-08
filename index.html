@@ -29,7 +29,6 @@
             position: relative;
         }
 
-        /* Subtle floating particles */
         .particle-container {
             position: fixed;
             top: 0;
@@ -67,7 +66,6 @@
             }
         }
 
-        /* Main container */
         .container {
             position: relative;
             z-index: 10;
@@ -78,7 +76,6 @@
             padding: 20px;
         }
 
-        /* Question screen */
         .question-screen {
             text-align: center;
             max-width: 600px;
@@ -154,7 +151,6 @@
             line-height: 1.6;
         }
 
-        /* Buttons */
         .buttons {
             display: flex;
             gap: 30px;
@@ -203,7 +199,6 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Success screen */
         .success-screen {
             display: none;
             text-align: center;
@@ -331,7 +326,6 @@
             font-weight: 300;
         }
 
-        /* Torn paper effect at bottom */
         .torn-paper {
             position: fixed;
             bottom: 0;
@@ -355,7 +349,6 @@
             z-index: 5;
         }
 
-        /* Confetti */
         .confetti-piece {
             position: fixed;
             width: 8px;
@@ -377,7 +370,6 @@
             }
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             h1 {
                 font-size: 3.5rem;
@@ -405,19 +397,16 @@
     </style>
 </head>
 <body>
-    <!-- Particles -->
     <div class="particle-container" id="particles"></div>
-
-    <!-- Torn paper effect -->
     <div class="torn-paper"></div>
 
     <div class="container">
         <!-- Question screen -->
         <div class="question-screen" id="questionScreen">
             <div class="heart-icon"></div>
-            <div class="happy-text">Happy</div>
-            <h1>Valentine's Day</h1>
-            <p class="question-text">Будешь моей Валентинкой?</p>
+            <div class="happy-text" id="happyText">Happy</div>
+            <h1 id="mainTitle">Valentine's Day</h1>
+            <p class="question-text" id="questionText">Будешь моей Валентинкой?</p>
             <div class="buttons">
                 <button id="yesBtn">Да</button>
                 <button id="noBtn">Нет</button>
@@ -426,47 +415,85 @@
 
         <!-- Success screen -->
         <div class="success-screen" id="successScreen">
-            <h1 class="success-title">Невероятно!</h1>
-            <p class="success-message">
+            <h1 class="success-title" id="successTitle">Невероятно!</h1>
+            <p class="success-message" id="successMessage">
                 Ты сделала меня самым счастливым человеком.<br>
                 Этот день будет незабываемым.
             </p>
             <div class="photos">
-                <!-- 
-                ИНСТРУКЦИЯ: Как добавить свои фотографии
-                
-                1. Загрузи свои фото вместе с этим файлом в GitHub
-                2. Назови их photo1.jpg, photo2.jpg, photo3.jpg
-                3. Раскомментируй строки с <img> (удали эти знаки)
-                4. Готово!
-                
-                Пример:
-                -->
                 <div class="photo-frame">
                     <div class="photo-content">
-                        <img src="photo1.jpg" alt="">
-                        <!-- ♡ -->
+                        <img src="photo1.jpg" alt="" style="display:none;">
+                        <span class="placeholder">♡</span>
                     </div>
                 </div>
                 <div class="photo-frame">
                     <div class="photo-content">
-                        <img src="photo2.jpg" alt="">
-                        <!-- ♡ -->
+                        <img src="photo2.jpg" alt="" style="display:none;">
+                        <span class="placeholder">♡</span>
                     </div>
                 </div>
                 <div class="photo-frame">
                     <div class="photo-content">
-                        <img src="photo3.jpg" alt="">
-                        <!-- ♡ -->
+                        <img src="photo3.jpg" alt="" style="display:none;">
+                        <span class="placeholder">♡</span>
                     </div>
                 </div>
             </div>
-            <p class="note">Наши самые прекрасные моменты вместе</p>
+            <p class="note" id="photoNote">Наши самые прекрасные моменты вместе</p>
         </div>
     </div>
 
     <script>
-        // Create subtle particles
+        // ═══════════════════════════════════════════════════════════
+        // 📝 НАСТРОЙКИ ТЕКСТА - МЕНЯЙ ЗДЕСЬ!
+        // ═══════════════════════════════════════════════════════════
+        
+        const TEXTS = {
+            // Экран с вопросом
+            happyText: 'Happy',                        // Текст над заголовком
+            mainTitle: "Valentine's Day",              // Главный заголовок
+            questionText: 'Будешь моей валентинкой?',  // Вопрос
+            yesButton: 'Да',                           // Кнопка "Да"
+            noButton: 'Нет',                           // Кнопка "Нет"
+            
+            // Экран успеха
+            successTitle: 'Невероятно!',               // Заголовок после "Да"
+            successMessage: 'Ты сделала меня самым счастливым человеком.<br>Хочу быть с тобой не только на день Валентина но и всегда Озге',  // Сообщение
+            photoNote: 'Наши самые прекрасные моменты вместе',  // Подпись под фото
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 📸 НАСТРОЙКИ ФОТОГРАФИЙ
+        // ═══════════════════════════════════════════════════════════
+        // Если хочешь показать фото - измени на true
+        // Фотографии должны называться: photo1.jpg, photo2.jpg, photo3.jpg
+        
+        const SHOW_PHOTOS = false;  // Измени на true, когда загрузишь фото!
+
+        // ═══════════════════════════════════════════════════════════
+        // ⚙️ КОД (НЕ ТРОГАЙ ЭТУ ЧАСТЬ!)
+        // ═══════════════════════════════════════════════════════════
+
+        // Применяем тексты
+        document.getElementById('happyText').textContent = TEXTS.happyText;
+        document.getElementById('mainTitle').textContent = TEXTS.mainTitle;
+        document.getElementById('questionText').textContent = TEXTS.questionText;
+        document.getElementById('yesBtn').textContent = TEXTS.yesButton;
+        document.getElementById('noBtn').textContent = TEXTS.noButton;
+        document.getElementById('successTitle').textContent = TEXTS.successTitle;
+        document.getElementById('successMessage').innerHTML = TEXTS.successMessage;
+        document.getElementById('photoNote').textContent = TEXTS.photoNote;
+
+        // Показываем фото если включено
+        if (SHOW_PHOTOS) {
+            const imgs = document.querySelectorAll('.photo-content img');
+            const placeholders = document.querySelectorAll('.photo-content .placeholder');
+            imgs.forEach(img => img.style.display = 'block');
+            placeholders.forEach(p => p.style.display = 'none');
+        }
+
+        // Частицы
         function createParticles() {
             const container = document.getElementById('particles');
             for (let i = 0; i < 30; i++) {
@@ -479,7 +506,7 @@
             }
         }
 
-        // No button - runs away
+        // Кнопка "Нет" убегает
         const noBtn = document.getElementById('noBtn');
         
         function moveNoButton() {
@@ -501,7 +528,7 @@
             moveNoButton();
         });
 
-        // Yes button
+        // Кнопка "Да"
         document.getElementById('yesBtn').addEventListener('click', () => {
             createConfetti();
             setTimeout(() => {
@@ -510,7 +537,7 @@
             }, 300);
         });
 
-        // Confetti
+        // Конфетти
         function createConfetti() {
             const colors = ['#FFFFFF', '#FAF3F0', '#F5E6E8'];
             
@@ -530,7 +557,6 @@
             }
         }
 
-        // Initialize
         createParticles();
     </script>
 </body>
