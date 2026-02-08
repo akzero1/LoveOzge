@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-red: #8B1538;
+            --rich-red: #A91D3A;
+            --cream: #FAF3F0;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            overflow: hidden;
+            height: 100vh;
+            background: var(--deep-red);
+            position: relative;
+        }
+
+        /* Subtle floating particles */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.15;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--white);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* Question screen */
+        .question-screen {
+            text-align: center;
+            max-width: 600px;
+            animation: fadeInScale 1s ease;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .heart-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .heart-icon::before,
+        .heart-icon::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 48px;
+            background: var(--white);
+            border-radius: 30px 30px 0 0;
+        }
+
+        .heart-icon::before {
+            left: 30px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart-icon::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .happy-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            letter-spacing: 8px;
+            color: var(--white);
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5rem;
+            color: var(--white);
+            margin-bottom: 60px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--cream);
+            margin-bottom: 60px;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            position: relative;
+            min-height: 70px;
+        }
+
+        button {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            padding: 18px 60px;
+            border: 2px solid var(--white);
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: transparent;
+        }
+
+        #yesBtn {
+            background: var(--white);
+            color: var(--deep-red);
+        }
+
+        #yesBtn:hover {
+            background: var(--cream);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        #noBtn {
+            background: transparent;
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        #noBtn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        #noBtn.floating {
+            position: fixed;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Success screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+            animation: fadeInScale 1.2s ease;
+        }
+
+        .success-screen.show {
+            display: block;
+        }
+
+        .success-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 6rem;
+            color: var(--white);
+            margin-bottom: 40px;
+            font-weight: 700;
+            animation: gentleBounce 0.8s ease;
+        }
+
+        @keyframes gentleBounce {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .success-message {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--cream);
+            margin-bottom: 60px;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        .photos {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .photo-frame {
+            width: 220px;
+            height: 220px;
+            background: var(--white);
+            padding: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            animation: photoReveal 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .photo-frame::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 1px solid rgba(139, 21, 56, 0.2);
+        }
+
+        .photo-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--cream) 0%, #F5E6E8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--rich-red);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-frame:nth-child(1) {
+            animation-delay: 0.4s;
+            transform: rotate(-3deg);
+        }
+
+        .photo-frame:nth-child(2) {
+            animation-delay: 0.6s;
+            transform: rotate(2deg);
+        }
+
+        .photo-frame:nth-child(3) {
+            animation-delay: 0.8s;
+            transform: rotate(-2deg);
+        }
+
+        @keyframes photoReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .note {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--cream);
+            margin-top: 50px;
+            font-style: italic;
+            opacity: 0.7;
+            font-weight: 300;
+        }
+
+        /* Torn paper effect at bottom */
+        .torn-paper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: var(--cream);
+            clip-path: polygon(
+                0% 30%, 2% 25%, 4% 32%, 6% 28%, 8% 35%, 
+                10% 30%, 12% 38%, 14% 32%, 16% 40%, 18% 35%,
+                20% 42%, 22% 38%, 24% 45%, 26% 40%, 28% 48%,
+                30% 42%, 32% 50%, 34% 45%, 36% 52%, 38% 48%,
+                40% 55%, 42% 50%, 44% 58%, 46% 52%, 48% 60%,
+                50% 55%, 52% 62%, 54% 58%, 56% 65%, 58% 60%,
+                60% 68%, 62% 62%, 64% 70%, 66% 65%, 68% 72%,
+                70% 68%, 72% 75%, 74% 70%, 76% 78%, 78% 72%,
+                80% 80%, 82% 75%, 84% 82%, 86% 78%, 88% 85%,
+                90% 80%, 92% 88%, 94% 82%, 96% 90%, 98% 85%,
+                100% 92%, 100% 100%, 0% 100%
+            );
+            z-index: 5;
+        }
+
+        /* Confetti */
+        .confetti-piece {
+            position: fixed;
+            width: 8px;
+            height: 12px;
+            background: var(--white);
+            top: -10px;
+            opacity: 0;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            .success-title {
+                font-size: 4rem;
+            }
+            
+            .question-text,
+            .success-message {
+                font-size: 1.4rem;
+            }
+            
+            .photo-frame {
+                width: 160px;
+                height: 160px;
+            }
+            
+            button {
+                padding: 15px 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles -->
+    <div class="particle-container" id="particles"></div>
+
+    <!-- Torn paper effect -->
+    <div class="torn-paper"></div>
+
+    <div class="container">
+        <!-- Question screen -->
+        <div class="question-screen" id="questionScreen">
+            <div class="heart-icon"></div>
+            <div class="happy-text">Happy</div>
+            <h1>Valentine's Day</h1>
+            <p class="question-text">Будешь моей Валентинкой?</p>
+            <div class="buttons">
+                <button id="yesBtn">Да</button>
+                <button id="noBtn">Нет</button>
+            </div>
+        </div>
+
+        <!-- Success screen -->
+        <div class="success-screen" id="successScreen">
+            <h1 class="success-title">Невероятно!</h1>
+            <p class="success-message">
+                Ты сделала меня самым счастливым человеком.<br>
+                Этот день будет незабываемым.
+            </p>
+            <div class="photos">
+                <!-- 
+                ИНСТРУКЦИЯ: Как добавить свои фотографии
+                
+                1. Загрузи свои фото вместе с этим файлом в GitHub
+                2. Назови их photo1.jpg, photo2.jpg, photo3.jpg
+                3. Раскомментируй строки с <img> (удали эти знаки)
+                4. Готово!
+                
+                Пример:
+                -->
+                <div class="photo-frame">
+                    <div class="photo-content">
+                        <img src="photo1.jpg" alt="">
+                        <!-- ♡ -->
+                    </div>
+                </div>
+                <div class="photo-frame">
+                    <div class="photo-content">
+                        <img src="photo2.jpg" alt="">
+                        <!-- ♡ -->
+                    </div>
+                </div>
+                <div class="photo-frame">
+                    <div class="photo-content">
+                        <img src="photo3.jpg" alt="">
+                        <!-- ♡ -->
+                    </div>
+                </div>
+            </div>
+            <p class="note">Наши самые прекрасные моменты вместе</p>
+        </div>
+    </div>
+
+    <script>
+        // Create subtle particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // No button - runs away
+        const noBtn = document.getElementById('noBtn');
+        
+        function moveNoButton() {
+            noBtn.classList.add('floating');
+            
+            const maxX = window.innerWidth - noBtn.offsetWidth - 40;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 40;
+            
+            const randomX = Math.random() * maxX + 20;
+            const randomY = Math.random() * maxY + 20;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        // Yes button
+        document.getElementById('yesBtn').addEventListener('click', () => {
+            createConfetti();
+            setTimeout(() => {
+                document.getElementById('questionScreen').style.display = 'none';
+                document.getElementById('successScreen').classList.add('show');
+            }, 300);
+        });
+
+        // Confetti
+        function createConfetti() {
+            const colors = ['#FFFFFF', '#FAF3F0', '#F5E6E8'];
+            
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti-piece';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.3 + 's';
+                    confetti.style.width = (Math.random() * 6 + 4) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 8) + 'px';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 20);
+            }
+        }
+
+        // Initialize
+        createParticles();
+    </script>
+</body>
+</html>
